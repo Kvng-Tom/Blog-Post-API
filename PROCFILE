@@ -1,2 +1,2 @@
-web : gunicorn BlogPostApi.wsgi:
+web : gunicorn BlogPostApi.wsgi
 release : python manage.py migrate

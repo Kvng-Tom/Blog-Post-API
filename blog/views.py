@@ -39,6 +39,29 @@ class BlogPostIDView(APIView):
 
         return Response(serializer.data)
     
+    
+    @swagger_auto_schema(request_body=BlogPostSerializer)
+    def put(self, request, pk):
+        
+        post = get_object_or_404(BlogPost, pk=pk)
+        serializer = BlogPostSerializer(post, data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+   
+    def delete(self, request, pk):
+
+        post = get_object_or_404(BlogPost, pk=pk)
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+    
 class BlogPostView(APIView):
     
     def get(self, request):
@@ -58,25 +81,4 @@ class BlogPostView(APIView):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @swagger_auto_schema(request_body=BlogPostSerializer)
-    def put(self, request, pk):
-        
-        post = get_object_or_404(BlogPost, pk=pk)
-        serializer = BlogPostSerializer(post, data=request.data)
-        
-        if serializer.is_valid():
-            serializer.save()
-
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @swagger_auto_schema(request_body=BlogPostSerializer)
-    def delete(self, request, pk):
-
-        post = get_object_or_404(BlogPost, pk=pk)
-        post.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
 
